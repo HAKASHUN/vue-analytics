@@ -38,6 +38,7 @@ export default function init (router, callback) {
       }
 
       const ids = getListId()
+      const autoLink = config.autoLink || []
 
       ids.forEach(function (id) {
         if (ids.length > 1) {
@@ -45,8 +46,15 @@ export default function init (router, callback) {
           // when a method is used Google knows which account did it
           options['name'] = getName(id)
         }
+        if (autoLink.length > 0) {
+          options['allowLinker'] = true
+        }
 
         window.ga('create', id, 'auto', options)
+        if (autoLink.length > 0) {
+          window.ga('require', 'linker')
+          window.ga('linker:autoLink', autoLink)
+        }
       })
 
       // the callback is fired when window.ga is available and before any other hit is sent
